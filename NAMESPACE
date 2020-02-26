@@ -5,3 +5,5 @@ import(stringr)
 import(feather)
 import(tidyr)
 import(magrittr)
+import(ggplot)
+
