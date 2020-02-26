@@ -23,8 +23,8 @@ library(irenabpdata)
 Download data: 
 
 <pre><code>
-bp_data_file<-irenabpdata::download_clean_save_bp()
-irena_data_file<-irenabpdata::download_clean_save_irena()
+bp_data_file<-download_clean_save_bp()
+irena_data_file<-download_clean_save_irena()
 </code></pre>
 
 Load database as tibble:
@@ -47,6 +47,11 @@ db_regions(bp_db)
 db_variables(bp_db)
 db_regions(irena_db)
 db_variables(irena_db)
+</code></pre>
+
+Use BP Database to print electricity mix over time for countries:
+<pre><code>
+plot_bp_electricity_generation(bp_db, "World")
 </code></pre>
 
 Join BP and IRENA data for comparison and compare:
