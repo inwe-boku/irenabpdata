@@ -1,0 +1,19 @@
+Package: irenabpdata
+Type: Package
+Title: Downloads bp and irena data and provides interface to it
+Version: 0.1.0
+Author: Johannes Schmidt
+Maintainer: Johannes Schmidt <johannes.schmidt@boku.ac.at>
+Description: Downloads data from the BP World Energy Review and the Irena renewable energy generation and capacity database.    
+             Provides also an interface to the data
+License: MIT 3.0
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    dplyr,
+    readxl,
+    feather,
+    stringr,
+    tidyr,
+    magrittr
+RoxygenNote: 7.0.2
