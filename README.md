@@ -4,7 +4,7 @@ This R-package downloads the IRENA renewable energy and capacity database and th
 
 ## Dependencies
 Dependencies are automatically installed:
-dplyr, readxl, stringr, feather, tidyr, magrittr
+dplyr, readxl, stringr, feather, tidyr, magrittr, ggplot2
 
 ## Installation
 Works with package devtools (install before usage!). Works on nora in RStudio. Should work without problems locally.
@@ -18,8 +18,9 @@ Different versions may be downloaded. File names are differentiated by date and 
 If the download url changes in the future, you have to provide it to the tool.
 
 ## Usage
+<pre><code>
 library(irenabpdata)
-library(ggplot2)
+</code></pre>
 
 Download data: 
 
