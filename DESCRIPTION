@@ -15,6 +15,5 @@ Imports:
     feather,
     stringr,
     tidyr,
-    magrittr,
-    ggplot2
+    magrittr
 RoxygenNote: 7.0.2
