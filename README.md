@@ -19,6 +19,7 @@ If the download url changes in the future, you have to provide it to the tool.
 
 ## Usage
 library(irenabpdata)
+library(ggplot2)
 
 Download data: 
 
