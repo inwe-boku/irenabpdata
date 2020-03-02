@@ -16,5 +16,6 @@ Imports:
     stringr,
     tidyr,
     magrittr,
-    ggplot2
+    ggplot2,
+    wbstats
 RoxygenNote: 7.0.2

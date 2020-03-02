@@ -156,7 +156,13 @@ download_clean_save_bp <- function(url="https://www.bp.com/content/dam/bp/busine
     dplyr::mutate(Country = str_replace(Country, "[1234*]", "")) %>%
     dplyr::mutate(Country = str_replace(Country, "Total ", "")) %>%
     dplyr::mutate(Country = str_replace(Country, " #", "")) %>%
-    dplyr::mutate(Country = ifelse(Country == "US", "USA", Country))
+    dplyr::mutate(Country = ifelse(Country == "US", "USA", Country)) %>% 
+    dplyr::mutate(Country = ifelse(Country == "Russian Fed", "Russian Federation", Country)) %>% 
+    dplyr::mutate(Country = ifelse(Country == "Russia", "Russian Federation", Country)) %>% 
+    dplyr::mutate(Country = ifelse(Country == "West Africa", "Western Africa", Country)) %>% 
+    dplyr::mutate(Country = ifelse(Country == "European Union ", "European Union", Country)) 
+  
+    
 
 
 
@@ -293,7 +299,7 @@ download_clean_save_irena<-function(url="https://www.irena.org/IRENADocuments/IR
 #' @param region Region to plot data
 #' @return A plot of the region
 #' @examples
-#' library(feather)
+#' download_clean_save_bp()
 #' bp_db<-load_db(get_bp_db_files()[1])
 #' plot_bp_electricity_generation(bp_db, "World")
 plot_bp_electricity_generation<-function(bp, region){
@@ -303,6 +309,11 @@ plot_bp_electricity_generation<-function(bp, region){
                      "Nuclear Generation - TWh",
                      "Renewables - TWh",
                      "Hydro Generation - TWh")
+  
+  mapply(get_values_of_variable,
+         list(bp),
+         list(region),
+         as.list(generation_vars))
 
   p<-bp %>%
     filter(Variable %in% generation_vars) %>%
@@ -320,6 +331,11 @@ plot_bp_electricity_generation<-function(bp, region){
 #' Returns a list of bp database files in the current directory
 #'
 #' @return vector with bp database files
+#' @examples
+#' download_clean_save_bp()
+#' irena_db<-load_db(get_bp_db_files()[1])
+#' get_bp_db_files()
+
 get_bp_db_files<-function(){
 
   file_list<-list.files(".")
@@ -332,6 +348,10 @@ get_bp_db_files<-function(){
 #' Returns a list of irena database files in the current directory
 #'
 #' @return vector with irena database files
+#' @examples
+#' download_clean_save_irena()
+#' irena_db<-load_db(get_irena_db_files()[1])
+#' get_irena_db_files()
 get_irena_db_files<-function(){
 
   file_list<-list.files(".")
@@ -344,6 +364,10 @@ get_irena_db_files<-function(){
 #'
 #' @param filename_db Filename of the database to load
 #' @return A tibble with the database
+#' #' @examples
+#' download_clean_save_irena()
+#' irena_db<-load_db(get_irena_db_files()[1])
+#' 
 load_db<-function(filename_db){
 
   return(feather(filename_db) %>% as_tibble())
@@ -357,7 +381,7 @@ load_db<-function(filename_db){
 #' @param indicator Which indicator should be shown? Either "Generation" or "Capacity"
 #' @return an image object
 #' @examples
-#'
+#' download_clean_save_irena()
 #' irena_db<-load_db(get_irena_db_files()[1])
 #' plot_irena_variables(irena_db, "World")
 #'
@@ -392,6 +416,8 @@ plot_irena_variables<-function(irena_db, country, variable_filter=c(), indicator
 #' @param irena_db An irena database
 #' @return A join of the bp and irena database of wind and pv capacities and generation
 #' @examples
+#' download_clean_save_irena()
+#' download_clean_save_bp()
 #' irena_db<-load_db(get_irena_db_files()[1])
 #' bp_db<-load_db(get_bp_db_files()[1])
 #' join_bp_irena<-join_bp_irena(bp_db, irena_db)
@@ -418,6 +444,8 @@ join_bp_irena<-function(bp_db, irena_db){
 #' @param bp_irena_db Database that joins bp and irena data
 #' @return Scatterplot of variables
 #' @examples
+#' download_clean_save_irena()
+#' download_clean_save_bp()
 #' irena_db<-load_db(get_irena_db_files()[1])
 #' bp_db<-load_db(get_bp_db_files()[1])
 #' join_bp_irena<-join_bp_irena(bp_db, irena_db)
@@ -441,7 +469,7 @@ plot_bp_vs_irena<-function(bp_irena_db){
 #' @param db Database from which regions should be listed
 #' @return Vector with regions in the database
 #' @examples
-#'
+#' download_clean_save_irena()
 #' irena_db<-load_db(get_irena_db_files()[1])
 #' db_regions(irena_db)
 db_regions<-function(db){
@@ -454,7 +482,7 @@ db_regions<-function(db){
 #' @param db Database from which variables should be listed
 #' @return Vector with regions in the database
 #' @examples
-#'
+#' download_clean_save_irena()
 #' irena_db<-load_db(get_irena_db_files()[1])
 #' db_variables(irena_db)
 db_variables<-function(db){
@@ -462,8 +490,87 @@ db_variables<-function(db){
 
 }
 
+#' Returns values of variables from db
+#'
+#' @param db Database from which values should be extracted
+#' @param country Country for which values should be extracted
+#' @param variable Variable for which values should be extracted
+#' @return Vector with values in the database. Issues a warning if the number of rows in this table are 0.
+#' @examples
+#' download_clean_save_bp()
+#' bp_db<-load_db(get_bp_db_files()[1])
+#' db_get_values_of_variables(bp_db, "Austria", "Oil - Refining capacity")
+get_values_of_variable<-function(db, country, variable){
+  res<-db %>% 
+    filter(Country == country) %>% 
+    filter(Variable == variable) 
+  
+  if(nrow(res) == 0){
+    warning(paste0(variable, " was not found for ", country))
+  }
+    
+  return(res)
+}
+
+#' Full join of worldbank database with either IRENA or BP database
+#'
+#' @param wb_db Worldbank database
+#' @param db IRENA or BP Database
+#' @param db_type Indicates if this is Irena or BP Database (Put "Irena" or "BP")
+#' @return A tibble with full_join of the two databases
+#' @examples
+#' download_clean_save_bp()
+#' bp_db<-load_db(get_bp_db_files()[1])
+#' join_wb_db("NY.GDP.MKTP.PP.KD", bp_db, "BP")
+join_wb_db<-function(indicator, db, db_type){
+
+  wb_db<-wbstats::wb(indicator=indicator)
+  
+  wb_db <- wb_db %>% mutate(date = as.numeric(date)) %>% 
+    full_join(country_merge_wb_bp_irena, by=c("country" = "World Bank"))
+  
+  db <- db %>% 
+    full_join(country_merge_wb_bp_irena, by=c("Country" = db_type))
+  
+  full_join(wb_db, db, by=c("country" = "World Bank", "date" = "Year")) %>% 
+    mutate(Country = country) %>% 
+    mutate(Variable_wb = indicator) %>% 
+    mutate(Variable_db = Variable) %>% 
+    mutate(Year = date) %>%
+    mutate(Db_type = db_type) %>% 
+    dplyr::select(iso3c,
+                  Country,
+                  Year,
+                  Variable_wb,
+                  Value_wb = value,
+                  Db_type, 
+                  Variable_db,
+                  Unit_db = Unit,
+                  Value_db = Value,
+                  Country_bp = BP) %>% 
+    as_tibble() %>% 
+    return()
+}
 
 
+#' Returns per capita value of either IRENA or BP database
+#'
+#' @param db IRENA or BP Database
+#' @param db_type Indicates if this is Irena or BP Database (Put "Irena" or "BP")
+#' @return A tibble with per capita values of variables in database
+#' @examples
+#' download_clean_save_bp()
+#' bp_db<-load_db(get_bp_db_files()[1])
+#' get_per_capita_values(bp_db, "BP")
 
+get_per_capita_values<-function(db, db_type){
+
+  j_pop_db<-join_wb_db("SP.POP.TOTL", db, db_type) 
+
+  j_pop_db<-j_pop_db %>% mutate(PerCap = Value_db/Value_wb)
+  j_pop_db %>% 
+    dplyr::select(Country = Country_bp, Year, Variable = Variable_db, Unit = Unit_db, Value = PerCap) %>% 
+    return()
+}
 
 

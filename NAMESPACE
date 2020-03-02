@@ -6,5 +6,6 @@ import(feather)
 import(tidyr)
 import(magrittr)
 import(ggplot2)
+import(wbstats)
 
 
