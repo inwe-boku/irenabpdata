@@ -18,7 +18,7 @@ A plot of the region
 Plot electricity generation per country from BP database
 }
 \examples{
-library(feather)
+download_clean_save_bp()
 bp_db<-load_db(get_bp_db_files()[1])
 plot_bp_electricity_generation(bp_db, "World")
 }

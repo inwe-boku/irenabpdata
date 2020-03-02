@@ -16,7 +16,7 @@ Vector with regions in the database
 Returns a list of variables from a database
 }
 \examples{
-
+download_clean_save_irena()
 irena_db<-load_db(get_irena_db_files()[1])
 db_variables(irena_db)
 }

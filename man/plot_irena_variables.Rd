@@ -25,7 +25,7 @@ an image object
 plots irena variables
 }
 \examples{
-
+download_clean_save_irena()
 irena_db<-load_db(get_irena_db_files()[1])
 plot_irena_variables(irena_db, "World")
 

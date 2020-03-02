@@ -12,3 +12,8 @@ vector with irena database files
 \description{
 Returns a list of irena database files in the current directory
 }
+\examples{
+download_clean_save_irena()
+irena_db<-load_db(get_irena_db_files()[1])
+get_irena_db_files()
+}

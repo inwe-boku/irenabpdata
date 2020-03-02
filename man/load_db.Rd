@@ -11,6 +11,9 @@ load_db(filename_db)
 }
 \value{
 A tibble with the database
+#' @examples
+download_clean_save_irena()
+irena_db<-load_db(get_irena_db_files()[1])
 }
 \description{
 loads one of the database from a feather file

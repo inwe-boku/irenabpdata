@@ -12,3 +12,8 @@ vector with bp database files
 \description{
 Returns a list of bp database files in the current directory
 }
+\examples{
+download_clean_save_bp()
+irena_db<-load_db(get_bp_db_files()[1])
+get_bp_db_files()
+}

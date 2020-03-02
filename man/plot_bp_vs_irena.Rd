@@ -16,6 +16,8 @@ Scatterplot of variables
 Plots Irena vs BP data related to wind and solar capacities and generation
 }
 \examples{
+download_clean_save_irena()
+download_clean_save_bp()
 irena_db<-load_db(get_irena_db_files()[1])
 bp_db<-load_db(get_bp_db_files()[1])
 join_bp_irena<-join_bp_irena(bp_db, irena_db)
