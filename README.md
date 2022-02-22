@@ -14,7 +14,7 @@ devtools::install_github("inwe-boku/irenabpdata")
 
 ## How it works
 
-The package downloads the respective databases from BP and Irena and saves them to feather files locally. Afterwards, the package can load those files and provides functions to plot basic variables and to join it with data from the world bank.
+The package downloads the respective databases from BP and Irena and saves them to feather files locally. This download has to be done only once. Afterwards, the package can load the converted files and provides functions to plot values from the database and to join them with data from the world bank.
 
 ## Example
 <pre><code>
