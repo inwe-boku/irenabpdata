@@ -4,7 +4,7 @@ This R-package downloads the BP Statistical Review of World Energy and the IRENA
 
 ## Dependencies
 Dependencies are automatically installed:
-```dplyr```, readxl, stringr, feather, tidyr, magrittr, ggplot2, wbstats
+```dplyr```, ```readxl```, ```stringr```, ```feather```, ```tidyr```, ```magrittr```, ```ggplot2```, ```wbstats```
 
 ## Installation
 Works with package devtools (install before usage!).
@@ -13,11 +13,10 @@ devtools::install_github("inwe-boku/irenabpdata")
 </code></pre>
 
 ## How it works
-The package is able to download data, clean it and save it to a feather file.
-Different versions may be downloaded. File names are differentiated by date and possibly a file version (if the file version is changed by the provider).
-If the download url changes in the future, you have to provide it to the tool.
 
-## Usage
+The package downloads the respective databases from BP and Irena and saves them to feather files locally. Afterwards, the package can load those files and provides functions to plot basic variables and to join it with data from the world bank.
+
+## Example
 <pre><code>
 library(irenabpdata)
 library(tidyverse)
@@ -27,66 +26,53 @@ library(ggplot2)
 Download data: 
 
 <pre><code>
-bp_data_file<-download_clean_save_bp()
-irena_data_file<-download_clean_save_irena()
+# This has to be executed only once - will save the bp file in your local directory
+download_clean_save_bp(guess_url(2021))
 </code></pre>
 
-Load database as tibble:
+Load BP database as tibble:
 
 <pre><code>
-bp_db<-load_db(bp_data_file)
-irena_db<-load_db(irena_data_file)
+bp<-load_latest_db_bp()
 </code></pre>
 
-Show database:
-<pre><code>
-view(bp_db)
-view(irena_db)
-</pre></code>
-
-Print all variables and regions in database:
+Plot primary energy consumption and electricity generation for some regions:
 
 <pre><code>
-db_regions(bp_db)
-db_variables(bp_db)
-db_regions(irena_db)
-db_variables(irena_db)
+plot_bp_primary_energy_mix(bp,c("World"))
+
+plot_bp_electricity_generation(bp,c("World"))
+
+plot_bp_electricity_generation(bp,c("Brazil",
+                                    "Germany",
+                                    "United Kingdom"))
+
 </code></pre>
 
-Use BP Database to print electricity mix over time for countries:
-<pre><code>
-plot_bp_electricity_generation(bp_db, "World")
-</code></pre>
+Join BP Data with world bank data on GDP and plot GDP vs. Carbon Dioxide Emissions:
 
-Join BP and IRENA data for comparison and compare:
 <pre><code>
-bp_irena_join<-join_bp_irena(bp_db, irena_db)
-plot_bp_vs_irena(bp_irena_join)
-</code></pre>
 
-Plot per capita GDP vs. Per Capita energy consumption:
-<pre><code>
-bp_db_per_capita<-get_per_capita_values(bp_db, "BP")
+gdp_bp<-join_wb_db("NY.GDP.MKTP.PP.KD", bp, "BP") %>% 
+  na.omit()
 
-#download gdp per capita and join with bp data
-j_gdp_bp_cap<-join_wb_db("NY.GDP.PCAP.PP.KD", 
-                         bp_db_per_capita,
-                         "BP")
-						 
-# plot data
-j_gdp_bp_cap %>% 
-  na.omit() %>%
-  filter(!(Country %in% country_regions$Region)) %>%   
-  filter(Variable_db =="Primary Energy Consumption") %>% 
-  ggplot(aes(x=Value_wb, y=Value_db *10^6)) + 
+gdp_bp %>% 
+  na.omit() %>% 
+  filter(Variable_db=="Carbon Dioxide Emissions") %>% 
+  filter(Country %in% c("North America",
+                        "China",
+                        "European Union",
+                        "South Africa",
+                        "Brazil",
+                        "World")) %>% 
+  ggplot(aes(x=Value_wb/10^12,y=Value_db/1000)) + 
   geom_point() +
-  xlab("GDP (PPP $2011 / Capita)") +
-  ylab("Primary Energy Consumption (toe/Capita)") +
-  scale_color_manual(values = COLORS10)
+  xlab("GDP (Constant 2017 international bn$)") +
+  ylab("Carbon Dioxide Emissions \n(Gt CO2)") +
+  facet_wrap(.~Country,scales="free") +
+  theme_bw()
 
-</code></pre>
-
-
+</pre></code>
 
 
 We gratefully acknowledge support from the European Research Council (“reFUEL” ERC2017-STG 758149).
