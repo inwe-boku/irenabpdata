@@ -49,6 +49,21 @@ plot_bp_electricity_generation(bp,c("Brazil",
 
 </code></pre>
 
+Plot pipeline gas imports of China:
+
+<code><pre>
+bp %>% 
+  filter(Country=="Russian Federation") %>% 
+  filter(str_detect(Variable,"Pipeline" )) %>% 
+  ggplot(aes(x=Year,y=Value))+
+  geom_line(aes(col=Variable))+
+  scale_color_manual(values=COLORS10)+
+  theme_bw()+
+  ylab("Imports/Exports (bcm)")
+</code></pre>
+           
+
+
 Join BP Data with world bank data on GDP and plot GDP vs. Carbon Dioxide Emissions:
 
 <pre><code>
@@ -73,6 +88,8 @@ gdp_bp %>%
   theme_bw()
 
 </pre></code>
+
+
 
 
 We gratefully acknowledge support from the European Research Council (“reFUEL” ERC2017-STG 758149).

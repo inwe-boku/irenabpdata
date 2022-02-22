@@ -110,9 +110,10 @@ download_clean_save_bp <- function(url="https://www.bp.com/content/dam/bp/busine
         
         tab_clean<-extract_trade_data_gas(tab)
         tab_clean_gather<-tab_clean %>%
-          tidyr::gather(Year, Value, -Country, -Unit, -Variable) %>%
           dplyr::mutate(Value = ifelse(Value %in% c("n/a", "^","-"),"",Value)) %>% 
-          dplyr::mutate(Value = as.numeric(Value))
+          dplyr::mutate(Value = as.numeric(Value)) %>% 
+          dplyr::mutate(Year = as.character(Year))
+        
         
         
       }else{
@@ -130,9 +131,10 @@ download_clean_save_bp <- function(url="https://www.bp.com/content/dam/bp/busine
                                                string_add)
         
         tab_clean_gather<-tab_clean %>%
-          tidyr::gather(Year, Value, -Country, -Unit, -Variable) %>%
+          #tidyr::gather(Year, Value, -Country, -Unit, -Variable) %>%
           dplyr::mutate(Value = ifelse(Value %in% c("n/a", "^","-"),"",Value)) %>% 
-          dplyr::mutate(Value = as.numeric(Value))
+          dplyr::mutate(Value = as.numeric(Value)) %>% 
+          dplyr::mutate(Year = as.character(Year))
         
         }
       
