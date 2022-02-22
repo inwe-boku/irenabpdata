@@ -39,11 +39,11 @@ bp <- load_latest_db_bp()
 Plot primary energy consumption and electricity generation for some regions:
 
 <pre><code>
-plot_bp_primary_energy_mix(bp,c("World"))
+plot_bp_primary_energy_mix(bp, c("World"))
 
-plot_bp_electricity_generation(bp,c("World"))
+plot_bp_electricity_generation(bp, c("World"))
 
-plot_bp_electricity_generation(bp,c("Brazil",
+plot_bp_electricity_generation(bp, c("Brazil",
                                     "Germany",
                                     "United Kingdom"))
 
