@@ -639,8 +639,9 @@ join_wb_db<-function(indicator, db, db_type){
   
   load("data/country_merge_wb_bp_irena.rda")
   
-  wb_db<-wbstats::wb(indicator=indicator) %>% as_tibble() %>% 
+  wb_db<-wbstats::wb_data(indicator=indicator, country="all") %>% as_tibble() %>% 
     mutate(date=as.numeric(date))
+  names(wb_db)[5]<-"value"
   
   joined_data<-NULL
   
