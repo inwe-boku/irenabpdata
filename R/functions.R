@@ -109,14 +109,19 @@ download_clean_save_bp <- function(url="https://www.bp.com/content/dam/bp/busine
       if(sheet == "Gas - Inter-regional trade"){
         
         tab_clean<-extract_trade_data_gas(tab)
+        tab_clean_gather<-tab_clean %>%
+          tidyr::gather(Year, Value, -Country, -Unit, -Variable) %>%
+          dplyr::mutate(Value = ifelse(Value %in% c("n/a", "^","-"),"",Value)) %>% 
+          dplyr::mutate(Value = as.numeric(Value))
+        
         
       }else{
         
-        string_add<-"Oil"
+        string_add<-"Oil - "
         
         if(sheet=="Coal - Trade movements"){
           
-          string_add<-"Coal"
+          string_add<-"Coal - "
           
         }
         
@@ -124,7 +129,12 @@ download_clean_save_bp <- function(url="https://www.bp.com/content/dam/bp/busine
         tab_clean<-extract_trade_data_oil_coal(tab,
                                                string_add)
         
-      }
+        tab_clean_gather<-tab_clean %>%
+          tidyr::gather(Year, Value, -Country, -Unit, -Variable) %>%
+          dplyr::mutate(Value = ifelse(Value %in% c("n/a", "^","-"),"",Value)) %>% 
+          dplyr::mutate(Value = as.numeric(Value))
+        
+        }
       
       
     }else{
@@ -153,13 +163,15 @@ download_clean_save_bp <- function(url="https://www.bp.com/content/dam/bp/busine
       
       tab_clean<-tab_clean[,1:max_column]
       
+      tab_clean_gather<-tab_clean %>%
+        tidyr::gather(Year, Value, -Country) %>%
+        dplyr::mutate(Variable = variable) %>%
+        dplyr::mutate(Unit = unit) %>%
+        dplyr::mutate(Value = ifelse(Value %in% c("n/a", "^","-"),"",Value)) %>% 
+        dplyr::mutate(Value = as.numeric(Value))
+      
+      
     }
-    tab_clean_gather<-tab_clean %>%
-      tidyr::gather(Year, Value, -Country) %>%
-      dplyr::mutate(Variable = variable) %>%
-      dplyr::mutate(Unit = unit) %>%
-      dplyr::mutate(Value = ifelse(Value %in% c("n/a", "^","-"),"",Value)) %>% 
-      dplyr::mutate(Value = as.numeric(Value))
     
     ####remove footnotes
     footnote_removes<-tab_clean_gather %>%
@@ -189,7 +201,8 @@ download_clean_save_bp <- function(url="https://www.bp.com/content/dam/bp/busine
     total_tab<-dplyr::bind_rows(total_tab,
                                 tab_clean_gather)
     
-  }
+    
+    }
   
   
   
@@ -726,7 +739,7 @@ get_per_capita_values<-function(db, db_type){
 #' @return A tibble with all trade values in the irenabpdata database format
 
 
-extract_trade_data_oil_coal<-function(sheet, prefix="Oil -"){
+extract_trade_data_oil_coal<-function(sheet, prefix="Oil - "){
   
   header_line<-sheet[2,c(1:(ncol(sheet)-5))] %>% unlist()
   last_year<-as.numeric(substr(dplyr::last(header_line),1,4))
@@ -795,7 +808,7 @@ extract_trade_data_gas<-function(sheet){
   
   unit<-header_line[1]
   Variable<-""
-  sheet<-sheet[3:25,c(1:(ncol(sheet)-5))]
+  sheet<-sheet[3:99,c(1:(ncol(sheet)-5))]
   names(sheet)[1]<-"Var"
   
   
@@ -856,7 +869,8 @@ extract_trade_data_gas<-function(sheet){
     mutate(Unit=unit) %>% 
     dplyr::mutate(Value = ifelse(Value %in% c("n/a", "^","-"),"",Value)) %>% 
     mutate(Value=as.numeric(Value)) %>% 
-    dplyr::select(Country, Year, Variable=Full_Variable, Unit, Value)
+    dplyr::select(Country, Year, Variable=Full_Variable, Unit, Value) %>% 
+    mutate(Variable=paste0("Gas - ",Variable))
   
   return(full_data)
 }
