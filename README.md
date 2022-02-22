@@ -27,13 +27,13 @@ Download data:
 
 <pre><code>
 # This has to be executed only once - will save the bp file in your local directory
-download_clean_save_bp(guess_url(2021))
+guess_url(2021) %>% download_clean_save_bp()
 </code></pre>
 
 Load BP database as tibble:
 
 <pre><code>
-bp<-load_latest_db_bp()
+bp <- load_latest_db_bp()
 </code></pre>
 
 Plot primary energy consumption and electricity generation for some regions:
@@ -68,7 +68,7 @@ Join BP Data with world bank data on GDP and plot GDP vs. Carbon Dioxide Emissio
 
 <pre><code>
 
-gdp_bp<-join_wb_db("NY.GDP.MKTP.PP.KD", bp, "BP") %>% 
+gdp_bp <- join_wb_db("NY.GDP.MKTP.PP.KD", bp, "BP") %>% 
   na.omit()
 
 gdp_bp %>% 
@@ -91,7 +91,7 @@ gdp_bp %>%
 
 
 
-
+## Acknowledgements
 We gratefully acknowledge support from the European Research Council (“reFUEL” ERC2017-STG 758149).
 
 
