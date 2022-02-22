@@ -1,11 +1,10 @@
 # irenabpdata
 
-This R-package downloads the IRENA renewable energy and capacity database and the BP Statistical Review of World Energy and provides an 
-interface to it. It also integrates with wbstats, a package used to read data from the World Bank Indicators Database.
+This R-package downloads the BP Statistical Review of World Energy and the IRENA renewable energy and capacity database and provides an interface to it. It also integrates with wbstats, a package used to read data from the World Bank Indicators Database.
 
 ## Dependencies
 Dependencies are automatically installed:
-dplyr, readxl, stringr, feather, tidyr, magrittr, ggplot2, wbstats
+```dplyr```, readxl, stringr, feather, tidyr, magrittr, ggplot2, wbstats
 
 ## Installation
 Works with package devtools (install before usage!).
