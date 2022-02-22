@@ -153,37 +153,38 @@ download_clean_save_bp <- function(url="https://www.bp.com/content/dam/bp/busine
       
       tab_clean<-tab_clean[,1:max_column]
       
-      tab_clean_gather<-tab_clean %>%
-        tidyr::gather(Year, Value, -Country) %>%
-        dplyr::mutate(Variable = variable) %>%
-        dplyr::mutate(Unit = unit) %>%
-        dplyr::mutate(Value = ifelse(Value %in% c("n/a", "^","-"),"",Value)) %>% 
-        dplyr::mutate(Value = as.numeric(Value))
-      
-      ####remove footnotes
-      footnote_removes<-tab_clean_gather %>%
-        dplyr::group_by(Variable, Country) %>%
-        dplyr::summarize(sum=sum(Value, na.rm=TRUE)) %>%
-        dplyr::mutate(to_remove = sum==0) %>%
-        dplyr::filter(to_remove)
-      
-      tab_clean_gather<-tab_clean_gather %>%
-        dplyr::filter(!(Country %in% footnote_removes$Country))
-      
-      
-      no_countries<-c("Canadian Oil Sands: Total",
-                      "of which: Under active development",
-                      "Venezuela: Orinoco Belt",
-                      "Light distillates",
-                      "of which: gasoline",
-                      "Middle distillates",
-                      "of which: diesel/gasoil",
-                      "of which: jet/kerosene",
-                      "Fuel oil")
-      ###remove strange "Countries"
-      tab_clean_gather<-tab_clean_gather %>%
-        dplyr::filter(!(Country %in% no_countries))
     }
+    tab_clean_gather<-tab_clean %>%
+      tidyr::gather(Year, Value, -Country) %>%
+      dplyr::mutate(Variable = variable) %>%
+      dplyr::mutate(Unit = unit) %>%
+      dplyr::mutate(Value = ifelse(Value %in% c("n/a", "^","-"),"",Value)) %>% 
+      dplyr::mutate(Value = as.numeric(Value))
+    
+    ####remove footnotes
+    footnote_removes<-tab_clean_gather %>%
+      dplyr::group_by(Variable, Country) %>%
+      dplyr::summarize(sum=sum(Value, na.rm=TRUE)) %>%
+      dplyr::mutate(to_remove = sum==0) %>%
+      dplyr::filter(to_remove)
+    
+    tab_clean_gather<-tab_clean_gather %>%
+      dplyr::filter(!(Country %in% footnote_removes$Country))
+    
+    
+    no_countries<-c("Canadian Oil Sands: Total",
+                    "of which: Under active development",
+                    "Venezuela: Orinoco Belt",
+                    "Light distillates",
+                    "of which: gasoline",
+                    "Middle distillates",
+                    "of which: diesel/gasoil",
+                    "of which: jet/kerosene",
+                    "Fuel oil")
+    ###remove strange "Countries"
+    tab_clean_gather<-tab_clean_gather %>%
+      dplyr::filter(!(Country %in% no_countries))
+    
     
     total_tab<-dplyr::bind_rows(total_tab,
                                 tab_clean_gather)
