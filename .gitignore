@@ -8,6 +8,5 @@ irenabpdata.Rproj
 *.feather
 *.png
 .Rbuildignore
-
-
-
+*.csv
+test.R
