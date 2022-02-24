@@ -6,11 +6,14 @@
 \usage{
 download_clean_save_bp(
  
-    url = "https://www.bp.com/content/dam/bp/business-sites/en/global/corporate/xlsx/energy-economics/statistical-review/bp-stats-review-2019-all-data.xlsx"
+    url = "https://www.bp.com/content/dam/bp/business-sites/en/global/corporate/xlsx/energy-economics/statistical-review/bp-stats-review-2021-all-data.xlsx",
+  target_dir = "./"
 )
 }
 \arguments{
-\item{url}{Url to latest BP World Energy Review Database. Latest known is provided as default.}
+\item{url}{Url to latest BP World Energy Review Database. Latest known is provided as default. You can use guess_url() to guess the latest url.}
+
+\item{target_dir}{Directory where database is stored. Current directory is default.}
 }
 \value{
 Name of feather file were final cleaned database is stored
@@ -19,5 +22,5 @@ Name of feather file were final cleaned database is stored
 Download, clean and save BP World Energy Review Database to feather format
 }
 \examples{
-download_clean_save_bp()
+download_clean_save_bp(guess_url(2021))
 }

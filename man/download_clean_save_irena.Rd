@@ -6,7 +6,8 @@
 \usage{
 download_clean_save_irena(
  
-    url = "https://www.irena.org/IRENADocuments/IRENA_RE_electricity_statistics_-_Query_tool.xlsm"
+    url = "https://www.irena.org/IRENADocuments/IRENA_RE_electricity_statistics_-_Query_tool.xlsm",
+  target_dir = "./"
 )
 }
 \arguments{

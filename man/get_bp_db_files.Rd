@@ -4,7 +4,7 @@
 \alias{get_bp_db_files}
 \title{Returns a list of bp database files in the current directory}
 \usage{
-get_bp_db_files()
+get_bp_db_files(dir = ".")
 }
 \value{
 vector with bp database files
