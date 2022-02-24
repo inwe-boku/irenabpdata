@@ -49,7 +49,7 @@ plot_bp_electricity_generation(bp, c("Brazil",
 
 </code></pre>
 
-Plot pipeline gas imports of China:
+Plot pipeline gas imports of Russia:
 
 <code><pre>
 bp %>% 
@@ -72,7 +72,6 @@ gdp_bp <- join_wb_db("NY.GDP.MKTP.PP.KD", bp, "BP") %>%
   na.omit()
 
 gdp_bp %>% 
-  na.omit() %>% 
   filter(Variable_db=="Carbon Dioxide Emissions") %>% 
   filter(Country %in% c("North America",
                         "China",
